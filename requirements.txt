@@ -3,8 +3,7 @@ numpy
 matplotlib
 seaborn
 scikit-learn
-scipy
 statsmodels
+scipy
 jupyter
 notebook
-

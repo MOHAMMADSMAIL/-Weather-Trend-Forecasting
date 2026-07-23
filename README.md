@@ -1,47 +1,41 @@
 
-# Weather Trend Forecasting 🌦️
+# Weather Trend Forecasting
 
 ## Project Overview
 
-This project focuses on analyzing weather data and forecasting future temperature trends using data science techniques.
+This project focuses on analyzing global weather data and forecasting future temperature trends using data science and machine learning techniques.
 
-The project uses the **Global Weather Repository Dataset** and applies a complete machine learning workflow including:
+The project uses the **Global Weather Repository Dataset** from Kaggle and applies a complete data science workflow including:
 
 * Data cleaning and preprocessing.
 * Exploratory Data Analysis (EDA).
-* Time series forecasting.
+* Time series preparation.
+* Forecasting model development.
 * Model evaluation.
 * Anomaly detection.
+* Machine learning model comparison.
 
-The main objective is to predict daily temperature trends using historical weather observations.
+The main objective is to analyze historical weather observations and build a forecasting pipeline to predict future temperature trends.
 
 ---
 
 ## Dataset
 
-Dataset:
+### Global Weather Repository Dataset
 
-**Global Weather Repository**
-
-The dataset contains daily weather information from cities around the world with more than 40 features.
+The dataset contains daily weather information for cities around the world with more than 40 weather-related features.
 
 For this project:
 
-* Location: **Amman, Jordan**
-* Target variable: **temperature_celsius**
-* Time feature: **last_updated**
-
-Selected features:
-
-* location_name
-* last_updated
-* temperature_celsius
+* **Selected Location:** Amman, Jordan
+* **Prediction Target:** `temperature_celsius`
+* **Time Feature:** `last_updated`
 
 ---
 
 ## Project Structure
 
-```
+```text
 Weather-Trend-Forecasting
 │
 ├── data
@@ -52,7 +46,8 @@ Weather-Trend-Forecasting
 │   └── 02_model_building.ipynb
 │
 ├── reports
-│   └── Weather_Trend_Forecasting_Report.md
+│   ├── Weather_Trend_Forecasting_Report.md
+│   └── preprocess_verification.py
 │
 ├── requirements.txt
 └── README.md
@@ -64,66 +59,139 @@ Weather-Trend-Forecasting
 
 ### 1. Data Preprocessing
 
-The preprocessing steps included:
+The preprocessing pipeline includes:
 
-* Loading the dataset.
+* Loading the dataset using Pandas.
 * Converting `last_updated` into datetime format.
 * Checking missing values.
-* Filtering Amman weather data.
-* Aggregating observations into daily temperature averages.
-* Splitting data into training and testing sets without shuffle.
+* Handling invalid values.
+* Detecting and treating outliers using the IQR method.
+* Filtering weather observations for Amman, Jordan.
+* Aggregating observations into daily temperature values.
+* Creating time-based features.
+* Scaling features using StandardScaler.
+* Splitting data into training and testing datasets without shuffling.
 
 ---
 
-### 2. Exploratory Data Analysis
+## Data Preprocessing Verification
 
-EDA was performed to analyze:
+A preprocessing verification script was created to validate the data preparation pipeline.
 
-* Temperature trends over time.
-* Precipitation patterns.
-* Weather feature relationships.
+The script performs:
 
-Visualizations were created to understand historical weather behavior.
+* Dataset loading and inspection.
+* Datetime conversion for `last_updated`.
+* Invalid value handling.
+* Missing value detection and imputation.
+* Outlier detection using the IQR method.
+* Feature extraction from timestamps.
+* Feature selection for modeling.
+* Feature scaling using StandardScaler.
+
+The preprocessing script is available at:
+
+```text
+reports/preprocess_verification.py
+```
+
+This verification step confirms that the preprocessing workflow is reproducible outside the notebook and can be reviewed directly from the project files.
 
 ---
 
-### 3. Forecasting Models
+## 2. Exploratory Data Analysis (EDA)
 
-The following models were implemented:
+EDA was performed to understand weather behavior and identify important patterns.
+
+The analysis includes:
+
+### Temperature Analysis
+
+Visualizing temperature changes over time to identify:
+
+* Seasonal trends.
+* Temperature fluctuations.
+* Long-term behavior.
+
+### Precipitation Analysis
+
+Analyzing precipitation patterns and rainfall variations.
+
+### Correlation Analysis
+
+Studying relationships between weather variables using correlation analysis.
+
+Visualizations were created using:
+
+* Matplotlib
+* Seaborn
+
+---
+
+## 3. Forecasting Models
+
+Multiple forecasting approaches were implemented.
 
 ### Baseline Model
 
-A Naive forecasting model was created as a simple reference.
+A Naive Forecasting model was created as a simple reference.
+
+The model predicts future temperature using previous observations.
 
 ### SARIMA Model
 
-A Seasonal ARIMA model was used for time series forecasting.
+A Seasonal ARIMA forecasting model was implemented using:
 
-Configuration:
-
-```
+```text
 SARIMAX(1,1,1)x(1,1,1,7)
 ```
 
-The model captures temporal patterns and weekly seasonality.
+The model captures historical temperature patterns, temporal dependencies, and weekly seasonal behavior.
 
 ### Random Forest Model
 
-A machine learning approach was implemented using lag features:
+A machine learning forecasting model was implemented using lag features.
 
-* Previous day temperature.
-* Previous 7 days temperature.
+Created features:
+
+* Previous day temperature (`lag_1`)
+* Previous 7 days temperature (`lag_7`)
+
+The model was trained using Random Forest Regressor.
 
 ---
 
-## Evaluation Metrics
+## Model Evaluation
 
 The models were evaluated using:
 
-* MAE (Mean Absolute Error)
-* RMSE (Root Mean Squared Error)
+### MAE
 
-Models were compared based on forecasting error.
+Mean Absolute Error measures the average difference between predicted and actual values.
+
+### RMSE
+
+Root Mean Squared Error measures prediction error and gives higher importance to larger mistakes.
+
+Evaluation results:
+
+| Model         | MAE       | RMSE      |
+| ------------- | --------- | --------- |
+| SARIMA        | 11.841225 | 14.480171 |
+| Random Forest | 2.220473  | 2.867336  |
+
+Based on the evaluation results, the Random Forest model achieved lower MAE and RMSE than SARIMA, indicating better forecasting performance on the test data.
+
+---
+
+## Actual vs Predicted Visualization
+
+A visualization was created comparing:
+
+* Actual temperature values.
+* SARIMA predicted temperature values.
+
+The plot shows how accurately the model follows the real temperature trend during the testing period.
 
 ---
 
@@ -131,66 +199,82 @@ Models were compared based on forecasting error.
 
 ### Anomaly Detection
 
-Temperature anomalies were detected using the Z-score method.
+Temperature anomaly detection was performed using the Z-score method.
 
 Threshold:
 
-```
+```text
 |Z-score| > 3
 ```
 
-The analysis was used to identify unusual temperature observations.
+Values outside this range are considered possible abnormal observations.
 
 ---
 
 ## Results
 
-The project successfully demonstrates:
+The project successfully demonstrates a complete weather forecasting workflow:
 
-* Weather data preprocessing.
+* Data preprocessing.
+* Exploratory analysis.
 * Time series forecasting.
-* Model comparison.
-* Weather trend analysis.
+* Machine learning comparison.
+* Model evaluation.
 * Anomaly detection.
 
-Detailed results and analysis are available in:
+The detailed analysis is available in:
 
-[Weather Trend Forecasting Report](reports/Weather_Trend_Forecasting_Report.md)
+```text
+reports/Weather_Trend_Forecasting_Report.md
+```
 
 ---
 
 ## Installation and Running
 
-Clone the repository:
+### Clone Repository
 
 ```bash
 git clone https://github.com/MOHAMMADSMAIL/-Weather-Trend-Forecasting.git
 ```
 
-Create a virtual environment:
+Move into project folder:
+
+```bash
+cd -Weather-Trend-Forecasting
+```
+
+### Create Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-Activate the environment:
-
-Windows:
+Activate environment on Windows:
 
 ```bash
 venv\Scripts\activate
 ```
 
-Install dependencies:
+### Install Requirements
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run Jupyter Notebook:
+### Run Project
+
+Start Jupyter Notebook:
 
 ```bash
 jupyter notebook
+```
+
+Open:
+
+```text
+notebooks/01_data_exploration.ipynb
+notebooks/02_model_building.ipynb
 ```
 
 ---
@@ -206,22 +290,24 @@ Main libraries:
 * Scikit-learn
 * Statsmodels
 * SciPy
+* Jupyter Notebook
 
 ---
 
 ## Future Improvements
 
-Future work may include:
+Possible future improvements:
 
-* Adding more cities for global forecasting.
-* Using additional weather features.
-* Testing advanced models such as XGBoost and LSTM.
-* Creating an interactive weather dashboard.
+* Add more cities for global forecasting.
+* Include additional weather features.
+* Test advanced models such as XGBoost, LSTM, or Transformers.
+* Build an interactive weather dashboard.
+* Deploy the forecasting model as a web application.
 
 ---
 
 ## Author
 
-Mohammad Al-Louzi
+**Mohammad Al-Louzi**
 
 Artificial Intelligence Student
